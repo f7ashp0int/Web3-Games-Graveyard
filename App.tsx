@@ -86,9 +86,20 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#1b1a2b] text-gray-300 font-sans">
+    <div className="flex flex-col min-h-screen bg-[#1b1a2b] text-gray-300 font-sans relative">
+      {/* Grid background */}
+      <div 
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(187, 211, 45, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(187, 211, 45, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}
+      ></div>
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8 md:py-16">
+      <main className="flex-grow container mx-auto px-4 py-8 md:py-16 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">A Resting Place for Digital Dreams</h2>
           <p className="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">Click on a tombstone to learn about the rise and fall of these web3 games.</p>

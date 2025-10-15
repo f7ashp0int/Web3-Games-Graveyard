@@ -2,7 +2,7 @@ import React from 'react';
 
 const Header: React.FC = () => {
   return (
-    <header className="py-4 border-b border-[#342f52]/50">
+    <header className="py-4 border-b border-[#342f52]/50 relative z-10">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <img 
