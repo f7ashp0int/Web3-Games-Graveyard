@@ -101,7 +101,7 @@ const App: React.FC = () => {
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8 md:py-16 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">A Resting Place for Digital Dreams</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">An Archive for dead web3 games</h2>
           <p className="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">Click on a tombstone to learn about the rise and fall of these web3 games.</p>
         </div>
 
