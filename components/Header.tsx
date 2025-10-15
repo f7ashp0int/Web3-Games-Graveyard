@@ -6,7 +6,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <img 
-            src="/wgd-Light.svg" 
+            src="./wgd-Light.svg" 
             alt="Web3 Games Graveyard Logo" 
             className="w-16 h-16"
           />
