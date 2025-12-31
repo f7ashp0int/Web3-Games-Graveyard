@@ -4,7 +4,7 @@ This document outlines the structure and configuration for the "Web3 Games Grave
 
 ## Form Title and Description
 - **Title**: Web3 Graveyard Lists
-- **Public URL**: https://docs.google.com/forms/d/e/1FAIpQLScrRVspMxpfoFIBUoq474p-LzNSZyPt2CTqD34s9BmVqwdq5g/viewform
+- **Public URL**: https://docs.google.com/forms/d/e/1FAIpQLScrRVspMxpfoFIBUoq474p-LzNSZyPt2CTqD34s9BmVqwdq5g/viewform?usp=dialog
 - **Description**: Submit a dead or dying Web3 game to the graveyard. Please provide as much accurate information as possible.
 
 ## Form Fields
