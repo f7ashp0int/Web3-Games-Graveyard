@@ -50,6 +50,11 @@ const App: React.FC = () => {
   const [allGames, setAllGames] = useState<Game[]>(gamesData); // Start with existing games
   const [isLoading, setIsLoading] = useState(true);
 
+  // Filter and Sort states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<GameStatus | 'ALL'>(GameStatus.DEAD);
+  const [sortBy, setSortBy] = useState<'death_desc' | 'death_asc' | 'name_asc' | 'name_desc'>('death_desc');
+
   useEffect(() => {
     const loadGames = async () => {
       try {
@@ -66,16 +71,36 @@ const App: React.FC = () => {
     loadGames();
   }, []);
 
-  const sortedGames = useMemo(() => {
+  const filteredAndSortedGames = useMemo(() => {
     return [...allGames]
-      .filter(game => game.status === GameStatus.DEAD) // Only show dead games
+      .filter(game => {
+        // Status Filter
+        if (statusFilter !== 'ALL' && game.status !== statusFilter) return false;
+        
+        // Search Filter
+        if (searchTerm) {
+          const term = searchTerm.toLowerCase();
+          return game.name.toLowerCase().includes(term) || 
+                 game.description.toLowerCase().includes(term);
+        }
+        
+        return true;
+      })
       .sort((a, b) => {
-        const dateA = parseDeathDate(a.deathDate);
-        const dateB = parseDeathDate(b.deathDate);
-        // Sort in descending order (newest first)
-        return dateB.getTime() - dateA.getTime();
+        // Sort Logic
+        switch (sortBy) {
+          case 'name_asc':
+            return a.name.localeCompare(b.name);
+          case 'name_desc':
+            return b.name.localeCompare(a.name);
+          case 'death_asc':
+            return parseDeathDate(a.deathDate).getTime() - parseDeathDate(b.deathDate).getTime();
+          case 'death_desc':
+          default:
+            return parseDeathDate(b.deathDate).getTime() - parseDeathDate(a.deathDate).getTime();
+        }
       });
-  }, [allGames]);
+  }, [allGames, statusFilter, searchTerm, sortBy]);
 
   const handleTombstoneClick = (game: Game) => {
     setSelectedGame(game);
@@ -105,6 +130,51 @@ const App: React.FC = () => {
           <p className="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">Click on a tombstone to learn about the rise and fall of these web3 games.</p>
         </div>
 
+        {/* Controls Section */}
+        <div className="mb-12 flex flex-col md:flex-row gap-4 justify-center items-center max-w-4xl mx-auto bg-[#342f52]/30 p-6 rounded-2xl border border-[#5e59a5]/30 backdrop-blur-sm">
+          {/* Search */}
+          <div className="relative w-full md:w-1/3">
+            <input
+              type="text"
+              placeholder="Search games..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-[#1b1a2b]/80 text-white border border-[#5e59a5]/50 rounded-lg px-4 py-2 focus:outline-none focus:border-[#bbd32d] focus:ring-1 focus:ring-[#bbd32d] transition-colors"
+            />
+            <svg className="w-5 h-5 absolute right-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          {/* Status Filter */}
+          <div className="w-full md:w-1/4">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as GameStatus | 'ALL')}
+              className="w-full bg-[#1b1a2b]/80 text-white border border-[#5e59a5]/50 rounded-lg px-4 py-2 focus:outline-none focus:border-[#bbd32d] focus:ring-1 focus:ring-[#bbd32d] transition-colors appearance-none cursor-pointer"
+            >
+              <option value={GameStatus.DEAD}>Dead Games</option>
+              <option value={GameStatus.DYING}>Dying Games</option>
+              <option value={GameStatus.GHOST}>Ghost Towns</option>
+              <option value="ALL">All Statuses</option>
+            </select>
+          </div>
+
+          {/* Sort Filter */}
+          <div className="w-full md:w-1/3">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="w-full bg-[#1b1a2b]/80 text-white border border-[#5e59a5]/50 rounded-lg px-4 py-2 focus:outline-none focus:border-[#bbd32d] focus:ring-1 focus:ring-[#bbd32d] transition-colors appearance-none cursor-pointer"
+            >
+              <option value="death_desc">Latest Death (Default)</option>
+              <option value="death_asc">Oldest Death</option>
+              <option value="name_asc">Name (A-Z)</option>
+              <option value="name_desc">Name (Z-A)</option>
+            </select>
+          </div>
+        </div>
+
         {isLoading ? (
           <div className="text-center py-16">
             <div className="text-lg text-gray-400">Loading games from community...</div>
@@ -114,7 +184,7 @@ const App: React.FC = () => {
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-16"
             style={{ perspective: '1000px' }}
           >
-            {sortedGames.map((game) => (
+            {filteredAndSortedGames.map((game) => (
               <Tombstone key={game.id} game={game} onClick={handleTombstoneClick} />
             ))}
           </div>

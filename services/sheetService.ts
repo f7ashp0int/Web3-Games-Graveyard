@@ -3,7 +3,7 @@ import { GameStatus } from '../types';
 import { gamesData } from '../data/games';
 
 // Replace this URL with your deployed Apps Script web app URL (from the Google Form response sheet)
-const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbx0or4k7pO6ihVUzk-VcPpa1EgEP7wtXkJL9hePTLOxAbwYRKeIOhYzMl-Q912AoGPk/exec';
+const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxC3nFFSjApJWXLCjhkCuimirIBTd8yXMKmDYWaUKSeJCO_rfJG-5Nwq2sYM-Kv2G1bxg/exec';
 
 export class SheetService {
   private static async fetchGamesFromSheet(): Promise<Game[]> {
