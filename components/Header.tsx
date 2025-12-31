@@ -11,10 +11,18 @@ const Header: React.FC = () => {
             className="w-16 h-16"
           />
           <div className="flex flex-col leading-tight">
-            <h1 className="text-xl font-bold text-white tracking-wider">Web3 Games</h1>
-            <h2 className="text-lg font-medium text-gray-400 tracking-wider">Graveyard</h2>
+            <h1 className="text-xl font-bold text-white tracking-wider font-logo">Web3 Games</h1>
+            <h2 className="text-lg font-medium text-gray-400 tracking-wider font-logo">Graveyard</h2>
           </div>
         </div>
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLScrRVspMxpfoFIBUoq474p-LzNSZyPt2CTqD34s9BmVqwdq5g/viewform"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-2 bg-[#7373bc] text-white font-semibold rounded-full transition-all duration-300 hover:bg-gradient-to-t from-[#A47CF3] to-[#683FEA] hover:shadow-[0_0_20px_0px_#9917FF] text-sm tracking-wide"
+        >
+          Submit Game
+        </a>
       </div>
     </header>
   );

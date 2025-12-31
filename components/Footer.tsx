@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
         <div className="mb-10 flex flex-col items-center">
           <p className="text-lg text-gray-400 mb-4">What else is dying?</p>
           <a
-            href="https://docs.google.com/spreadsheets/d/1eQiZUsXIDi5TsLDX3ylbnf8BKw-BPhLOJuu4cjzBUYk/edit?usp=sharing"
+            href="https://docs.google.com/forms/d/e/1FAIpQLScrRVspMxpfoFIBUoq474p-LzNSZyPt2CTqD34s9BmVqwdq5g/viewform"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative inline-flex items-center justify-center gap-3 w-48 h-16 bg-[#7373bc] rounded-full cursor-pointer transition-all duration-300 ease-in-out hover:bg-gradient-to-t from-[#A47CF3] to-[#683FEA] hover:shadow-[0_0_0_4px_rgba(104,63,234,0.4),0_0_60px_0px_#9917FF] hover:-translate-y-1"

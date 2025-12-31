@@ -2,7 +2,7 @@ import type { Game } from '../types';
 import { GameStatus } from '../types';
 import { gamesData } from '../data/games';
 
-// Replace this URL with your deployed Apps Script web app URL
+// Replace this URL with your deployed Apps Script web app URL (from the Google Form response sheet)
 const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxC3nFFSjApJWXLCjhkCuimirIBTd8yXMKmDYWaUKSeJCO_rfJG-5Nwq2sYM-Kv2G1bxg/exec';
 
 export class SheetService {
@@ -17,13 +17,13 @@ export class SheetService {
       // Transform sheet data to match our Game interface
       return data.map((game: any) => ({
         id: game.id,
-        name: game.name,
-        logoUrl: game.logoUrl,
-        status: this.mapStatus(game.status),
-        description: game.description,
-        reasonForDemise: game.reasonForDemise,
-        launchDate: game.launchDate,
-        deathDate: game.deathDate,
+        name: game.name || 'Unknown Game',
+        logoUrl: game.logoUrl || './wgd-Light.svg',
+        status: this.mapStatus(game.status || ''),
+        description: game.description || 'No description available.',
+        reasonForDemise: game.reasonForDemise || 'Unknown',
+        launchDate: game.launchDate || 'Unknown',
+        deathDate: game.deathDate || 'Unknown',
         category: game.category,
         source: game.source,
         blockchain: game.blockchain,
@@ -39,6 +39,22 @@ export class SheetService {
       console.error('Error fetching games from sheet:', error);
       return []; // Return empty array if sheet fetch fails
     }
+  }
+
+  private static formatDate(dateStr: string): string {
+    if (!dateStr) return 'Unknown';
+    
+    // Check if it's an ISO string (contains 'T' and looks like a date)
+    const date = new Date(dateStr);
+    if (!isNaN(date.getTime()) && dateStr.includes('T')) {
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+    
+    return dateStr;
   }
 
   private static mapStatus(status: string): GameStatus {
