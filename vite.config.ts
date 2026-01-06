@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-      base: '/Web3-Games-Graveyard/',
+      base: './', // Use relative base path to support custom domains
       plugins: [
         tailwindcss(),
       ],
