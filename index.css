@@ -1,6 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Figtree', sans-serif;
+  --font-logo: 'Geom', sans-serif;
+}
 
 body {
   @apply bg-[#1b1a2b] text-gray-300 font-sans;
