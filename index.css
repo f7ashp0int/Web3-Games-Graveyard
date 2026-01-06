@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Figtree', sans-serif;
+  --font-logo: 'Geom', sans-serif;
+}
