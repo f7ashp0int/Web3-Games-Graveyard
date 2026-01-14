@@ -1,23 +1,44 @@
-# Web3 Games Graveyard
+# Web3 Games Graveyard 🪦
 
-An archive for dead web3 games - a memorial to the fleeting nature of digital worlds.
+An archive for dead web3 games — a memorial to the fleeting nature of digital worlds.
 
-## Features
+![Web3 Games Graveyard](https://img.shields.io/badge/Status-Live-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue)
 
-- Interactive tombstone gallery
-- Community-driven data via Google Sheets
-- Glass-effect 3D animations
-- Responsive design
+## 🌐 Live Site
 
-## Contributing
+**[web3graveyard.site](https://web3graveyard.site)**
 
-Add new games to our [Google Sheet](https://docs.google.com/spreadsheets/d/1eQiZUsXIDi5TsLDX3ylbnf8BKw-BPhLOJuu4cjzBUYk/edit?usp=sharing)
+## ✨ Features
 
-## Live Site
+- 🪦 **Interactive Tombstone Gallery** — Browse through fallen web3 games
+- 🎮 **Community-Driven Data** — Crowdsourced information about defunct games
+- 💎 **Glass-Effect 3D Animations** — Modern glassmorphism design
+- 📱 **Responsive Design** — Works seamlessly on all devices
 
-Visit: https://f7ashp0int.github.io/Web3-Games-Graveyard/
+## 🚀 Run Locally
 
-## Run Locally
+```bash
+# Clone the repository
+git clone https://github.com/f7ashp0int/Web3-Games-Graveyard.git
 
-1. Install dependencies: `npm install`
-2. Run the app: `npm run dev`
+# Navigate to the project
+cd Web3-Games-Graveyard
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+## 🤝 Contributing
+
+Want to add a game to the graveyard? Open an issue or submit a pull request with the game details.
+
+## 📄 License
+
+MIT License — feel free to use and modify.
+
+---
+
+*Rest in peace, dear games. You will be remembered.* 🕯️
