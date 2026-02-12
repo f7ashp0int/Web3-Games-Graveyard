@@ -13,7 +13,7 @@ export class SheetService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      
+
       // Transform sheet data to match our Game interface
       return data.map((game: any) => ({
         id: game.id,
@@ -43,32 +43,28 @@ export class SheetService {
 
   private static formatDate(dateStr: string): string {
     if (!dateStr) return 'Unknown';
-    
+
     // Check if it's an ISO string (contains 'T' and looks like a date)
     const date = new Date(dateStr);
     if (!isNaN(date.getTime()) && dateStr.includes('T')) {
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       });
     }
-    
+
     return dateStr;
   }
 
   private static mapStatus(status: string): GameStatus {
-    switch (status.toLowerCase()) {
-      case 'dead':
-        return GameStatus.DEAD;
-      case 'dying':
-        return GameStatus.DYING;
-      case 'ghost town':
-      case 'ghost':
-        return GameStatus.GHOST;
-      default:
-        return GameStatus.DEAD; // Default to DEAD if unknown
-    }
+    const s = status.toLowerCase();
+    if (s.includes('dying')) return GameStatus.DYING;
+    if (s.includes('ghost')) return GameStatus.GHOST;
+    // Default to DEAD if it contains 'dead' or if unknown, but checking 'dead' explicitly helps if we have other stati later
+    if (s.includes('dead')) return GameStatus.DEAD;
+
+    return GameStatus.DEAD;
   }
 
   public static async getAllGames(): Promise<Game[]> {

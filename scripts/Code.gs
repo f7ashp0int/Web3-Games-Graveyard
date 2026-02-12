@@ -25,6 +25,7 @@ const COLUMN_MAP = {
   'Cause of Shutdown': 'reasonForDemise', // Added based on your form update
   'Launch Date': 'launchDate',
   'Death Date': 'deathDate',
+  'End Date': 'deathDate',
   'Logo URL': 'logoUrl',
   'Category': 'category',
   'Blockchain': 'blockchain',
