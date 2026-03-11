@@ -46,7 +46,7 @@ const GameDetailModal: React.FC<GameDetailModalProps> = ({ game, onClose }) => {
 
         <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
           <div className="flex-shrink-0 w-24 h-24 bg-[#5e59a5] rounded-full flex items-center justify-center border-2 border-[#bbd32d] overflow-hidden">
-             <img src={game.logoUrl} alt={`${game.name} logo`} className="w-full h-full object-contain p-2" />
+            <img src={game.logoUrl} alt={`${game.name} logo`} className="w-full h-full object-contain p-2" />
           </div>
           <div className="text-center sm:text-left">
             <h2 className="text-3xl font-bold text-white">{game.name}</h2>
@@ -69,6 +69,24 @@ const GameDetailModal: React.FC<GameDetailModalProps> = ({ game, onClose }) => {
             <span><strong>Launched:</strong> {game.launchDate}</span>
             <span><strong>Faded:</strong> {game.deathDate}</span>
           </div>
+
+          {game.addedBy && (
+            <div className="text-center mt-6 text-xs text-gray-500 border-t border-[#5e59a5]/30 pt-4">
+              Added by {game.addedBy.split(',').map((handle, index, array) => (
+                <React.Fragment key={handle.trim()}>
+                  <a
+                    href={`https://x.com/${handle.trim()}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#bbd32d] hover:underline"
+                  >
+                    @{handle.trim()}
+                  </a>
+                  {index < array.length - 1 && ', '}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <style>{`

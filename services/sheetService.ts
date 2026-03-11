@@ -23,7 +23,7 @@ export class SheetService {
         description: game.description || 'No description available.',
         reasonForDemise: game.reasonForDemise || 'Unknown',
         launchDate: this.formatDate(game.launchDate),
-        deathDate: this.formatDate(game.deathDate),
+        deathDate: this.formatDate(game.deathDate, this.mapStatus(game.status || '')),
         category: game.category,
         source: game.source,
         blockchain: game.blockchain,
@@ -41,8 +41,11 @@ export class SheetService {
     }
   }
 
-  private static formatDate(dateStr: string): string {
-    if (!dateStr) return 'Unknown';
+  private static formatDate(dateStr: string, status?: GameStatus): string {
+    if (!dateStr || dateStr.toLowerCase() === 'unknown') {
+      if (status === GameStatus.DYING) return 'Dying';
+      return 'Unknown';
+    }
 
     // Check if it's an ISO string (contains 'T' and looks like a date)
     const date = new Date(dateStr);

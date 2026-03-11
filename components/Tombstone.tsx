@@ -42,15 +42,20 @@ const Tombstone: React.FC<TombstoneProps> = ({ game, onClick }) => {
 
             {game.addedBy && (
               <div className="text-[10px] text-gray-400 mt-1 pt-1 border-t border-[#5e59a5]/30 w-full">
-                Added by <a
-                  href={`https://x.com/${game.addedBy}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#bbd32d] hover:underline"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  @{game.addedBy}
-                </a>
+                Added by {game.addedBy.split(',').map((handle, index, array) => (
+                  <React.Fragment key={handle.trim()}>
+                    <a
+                      href={`https://x.com/${handle.trim()}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#bbd32d] hover:underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      @{handle.trim()}
+                    </a>
+                    {index < array.length - 1 && ', '}
+                  </React.Fragment>
+                ))}
               </div>
             )}
           </div>
