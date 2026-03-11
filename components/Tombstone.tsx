@@ -16,32 +16,34 @@ const Tombstone: React.FC<TombstoneProps> = ({ game, onClick }) => {
     >
       <div className="relative w-full aspect-[3/4] transition-all duration-500 group-hover:-translate-y-2" style={{ transform: 'rotateX(10deg)' }}>
         {/* Tombstone body */}
-        <div className="absolute inset-0 bg-[#342f52]/50 backdrop-blur-sm rounded-t-full rounded-b-md border border-[#5e59a5]/30 flex flex-col items-center justify-center p-4 transition-all duration-300 group-hover:border-[#bbd32d] group-hover:shadow-[0_0_20px_0px_rgba(187,211,45,0.3)]">
+        <div className="absolute inset-0 bg-[#342f52]/50 backdrop-blur-sm rounded-t-full rounded-b-md border border-[#5e59a5]/30 flex flex-col items-center justify-between p-4 pt-6 pb-3 transition-all duration-300 group-hover:border-[#bbd32d] group-hover:shadow-[0_0_20px_0px_rgba(187,211,45,0.3)]">
 
-
-          <div className="w-3/4 aspect-square bg-[#5e59a5]/30 rounded-full flex items-center justify-center shadow-inner overflow-hidden mb-1">
+          <div className="w-3/4 aspect-square bg-[#5e59a5]/30 rounded-full flex items-center justify-center shadow-inner overflow-hidden flex-shrink-0">
             <img
               src={game.logoUrl}
               alt={`${game.name} logo`}
               className="w-full h-full object-contain p-1 group-hover:scale-110 transition-transform duration-300"
             />
           </div>
+          
           {/* Game name and dates */}
-          <div className="text-center text-xs text-[#bbd32d] space-y-1 w-full">
-            <div className="font-semibold text-white text-xs mb-1 truncate px-2">{game.name}</div>
+          <div className="text-center text-[#bbd32d] space-y-0.5 w-full flex flex-col justify-end flex-grow mt-2">
+            <div className="font-semibold text-white text-xs truncate px-2">{game.name}</div>
 
-            <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mb-1 border ${game.status === GameStatus.DEAD ? 'bg-red-900/30 text-red-200 border-red-500/30' :
-              game.status === GameStatus.DYING ? 'bg-yellow-900/30 text-yellow-200 border-yellow-500/30' :
-                'bg-gray-700/30 text-gray-300 border-gray-500/30'
-              }`}>
-              {game.status}
+            <div>
+              <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block border ${game.status === GameStatus.DEAD ? 'bg-red-900/30 text-red-200 border-red-500/30' :
+                game.status === GameStatus.DYING ? 'bg-yellow-900/30 text-yellow-200 border-yellow-500/30' :
+                  'bg-gray-700/30 text-gray-300 border-gray-500/30'
+                }`}>
+                {game.status}
+              </div>
             </div>
 
-            <div className="font-semibold">📅 {game.launchDate}</div>
-            <div className="font-semibold">💀 {game.deathDate}</div>
+            <div className="font-semibold text-[10px]">📅 {game.launchDate}</div>
+            <div className="font-semibold text-[10px]">💀 {game.deathDate}</div>
 
             {game.addedBy && (
-              <div className="text-[10px] text-gray-400 mt-1 pt-1 border-t border-[#5e59a5]/30 w-full truncate">
+              <div className="text-[9px] text-gray-400 mt-1 pt-1 border-t border-[#5e59a5]/30 w-full truncate">
                 Added by {game.addedBy.split(',').map((handle, index, array) => (
                   <React.Fragment key={handle.trim()}>
                     <a
