@@ -16,9 +16,9 @@ const Tombstone: React.FC<TombstoneProps> = ({ game, onClick }) => {
     >
       <div className="relative w-full aspect-[3/4] transition-all duration-500 group-hover:-translate-y-2" style={{ transform: 'rotateX(10deg)' }}>
         {/* Tombstone body */}
-        <div className="absolute inset-0 bg-[#342f52]/50 backdrop-blur-sm rounded-t-full rounded-b-md border border-[#5e59a5]/30 flex flex-col items-center justify-between p-4 pt-6 pb-3 transition-all duration-300 group-hover:border-[#bbd32d] group-hover:shadow-[0_0_20px_0px_rgba(187,211,45,0.3)]">
+        <div className="absolute inset-0 bg-[#342f52]/50 backdrop-blur-sm rounded-t-full rounded-b-md border border-[#5e59a5]/30 flex flex-col items-center justify-start p-4 transition-all duration-300 group-hover:border-[#bbd32d] group-hover:shadow-[0_0_20px_0px_rgba(187,211,45,0.3)]">
 
-          <div className="w-3/4 aspect-square bg-[#5e59a5]/30 rounded-full flex items-center justify-center shadow-inner overflow-hidden flex-shrink-0">
+          <div className="w-3/4 aspect-square bg-[#5e59a5]/30 rounded-full flex items-center justify-center shadow-inner overflow-hidden flex-shrink-0 mt-2">
             <img
               src={game.logoUrl}
               alt={`${game.name} logo`}
