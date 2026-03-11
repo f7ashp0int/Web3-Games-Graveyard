@@ -41,7 +41,7 @@ const Tombstone: React.FC<TombstoneProps> = ({ game, onClick }) => {
             <div className="font-semibold">💀 {game.deathDate}</div>
 
             {game.addedBy && (
-              <div className="text-[10px] text-gray-400 mt-1 pt-1 border-t border-[#5e59a5]/30 w-full">
+              <div className="text-[10px] text-gray-400 mt-1 pt-1 border-t border-[#5e59a5]/30 w-full truncate">
                 Added by {game.addedBy.split(',').map((handle, index, array) => (
                   <React.Fragment key={handle.trim()}>
                     <a

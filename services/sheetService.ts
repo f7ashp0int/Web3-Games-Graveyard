@@ -44,7 +44,7 @@ export class SheetService {
   private static formatDate(dateStr: string, status?: GameStatus): string {
     if (!dateStr || dateStr.toLowerCase() === 'unknown') {
       if (status === GameStatus.DYING) return 'Dying';
-      return 'Unknown';
+      return 'TBA';
     }
 
     // Check if it's an ISO string (contains 'T' and looks like a date)
