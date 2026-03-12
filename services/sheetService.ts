@@ -23,7 +23,7 @@ export class SheetService {
         description: game.description || 'No description available.',
         reasonForDemise: game.reasonForDemise || 'Unknown',
         launchDate: this.formatDate(game.launchDate),
-        deathDate: game.deathDate || game.endDate || game['End Date'] || this.formatDate('', this.mapStatus(game.status || '')),
+        deathDate: this.formatDate(game.deathDate || game.endDate || game['End Date'] || '', this.mapStatus(game.status || '')),
         category: game.category,
         source: game.source,
         blockchain: game.blockchain,
