@@ -71,13 +71,48 @@ export class SheetService {
   }
 
   public static async getAllGames(): Promise<Game[]> {
-    // Fetch both existing games and new games from sheet
-    const [existingGames, sheetGames] = await Promise.all([
-      Promise.resolve(gamesData), // Use direct import instead of dynamic import
-      this.fetchGamesFromSheet()
-    ]);
+    try {
+      // Fetch both existing games and new games from sheet
+      const [existingGames, sheetGames] = await Promise.all([
+        Promise.resolve(gamesData),
+        this.fetchGamesFromSheet()
+      ]);
 
-    // Combine both arrays
-    return [...existingGames, ...sheetGames];
+      // Use a Map for deduplication based on normalized name
+      const gamesMap = new Map<string, Game>();
+
+      // 1. Load hardcoded games first
+      existingGames.forEach(game => {
+        gamesMap.set(game.name.toLowerCase().trim(), game);
+      });
+
+      // 2. Load/Merge sheet games
+      sheetGames.forEach(sheetGame => {
+        const normalizedName = sheetGame.name.toLowerCase().trim();
+        const existingGame = gamesMap.get(normalizedName);
+
+        if (existingGame) {
+          // Merge: Prefer sheet data, but fallback to hardcoded data if sheet is missing info
+          gamesMap.set(normalizedName, {
+            ...existingGame,
+            ...sheetGame,
+            // Explicitly fallback for deathDate if sheet version is TBA
+            deathDate: (sheetGame.deathDate && sheetGame.deathDate !== 'TBA') 
+              ? sheetGame.deathDate 
+              : existingGame.deathDate,
+            // Keep original ID or take sheet ID? Usually existing ID is fine
+            id: existingGame.id
+          });
+        } else {
+          // New game from sheet
+          gamesMap.set(normalizedName, sheetGame);
+        }
+      });
+
+      return Array.from(gamesMap.values());
+    } catch (error) {
+      console.error('Error in getAllGames:', error);
+      return gamesData;
+    }
   }
 }
