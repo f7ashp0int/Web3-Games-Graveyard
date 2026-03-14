@@ -3,12 +3,13 @@ import { GameStatus } from '../types';
 import { gamesData } from '../data/games';
 
 // Replace this URL with your deployed Apps Script web app URL (from the Google Form response sheet)
-const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbx0or4k7pO6ihVUzk-VcPpa1EgEP7wtXkJL9hePTLOxAbwYRKeIOhYzMl-Q912AoGPk/exec';
+const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxNK2fFXpPf-tpKi8bm22ywH_U6wbuGzAt6b-mMEovWJsbp24Y9iqux2mz7FFRawb8/exec';
 
 export class SheetService {
   private static async fetchGamesFromSheet(): Promise<Game[]> {
     try {
-      const response = await fetch(SHEET_API_URL);
+      const cacheBuster = `?t=${new Date().getTime()}`;
+      const response = await fetch(`${SHEET_API_URL}${cacheBuster}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -17,21 +18,21 @@ export class SheetService {
       // Transform sheet data to match our Game interface
       return data.map((game: any) => ({
         id: game.id,
-        name: game.name || 'Unknown Game',
-        logoUrl: game.logoUrl || './wgd-Light.svg',
+        name: String(game.name || 'Unknown Game'),
+        logoUrl: String(game.logoUrl || '/wgd-Light.svg'),
         status: this.mapStatus(game.status || ''),
-        description: game.description || 'No description available.',
-        reasonForDemise: game.reasonForDemise || 'Unknown',
-        launchDate: this.formatDate(game.launchDate),
-        deathDate: this.formatDate(game.deathDate || game.endDate || game['End Date'] || '', this.mapStatus(game.status || '')),
-        category: game.category,
-        source: game.source,
-        blockchain: game.blockchain,
-        developer: game.developer,
-        fundingRaised: game.fundingRaised,
-        peakPlayers: game.peakPlayers,
-        tags: game.tags,
-        addedBy: game.addedBy,
+        description: String(game.description || 'No description available.'),
+        reasonForDemise: String(game.reasonForDemise || 'Unknown'),
+        launchDate: this.formatDate(String(game.launchDate || '')),
+        deathDate: this.formatDate(String(game.deathDate || game.endDate || game['End Date'] || ''), this.mapStatus(game.status || '')),
+        category: game.category ? String(game.category) : undefined,
+        source: game.source ? String(game.source) : undefined,
+        blockchain: game.blockchain ? String(game.blockchain) : undefined,
+        developer: game.developer ? String(game.developer) : undefined,
+        fundingRaised: game.fundingRaised ? String(game.fundingRaised) : undefined,
+        peakPlayers: game.peakPlayers ? String(game.peakPlayers) : undefined,
+        tags: game.tags ? String(game.tags) : undefined,
+        addedBy: game.addedBy ? String(game.addedBy) : undefined,
         lastUpdated: game.lastUpdated,
         verified: game.verified
       }));
@@ -42,7 +43,7 @@ export class SheetService {
   }
 
   private static formatDate(dateStr: string, status?: GameStatus): string {
-    if (!dateStr || dateStr.toLowerCase() === 'unknown') {
+    if (!dateStr || dateStr.toLowerCase() === 'unknown' || dateStr === '-') {
       if (status === GameStatus.DYING) return 'Dying';
       return 'TBA';
     }
@@ -97,8 +98,8 @@ export class SheetService {
             ...existingGame,
             ...sheetGame,
             // Explicitly fallback for deathDate if sheet version is TBA
-            deathDate: (sheetGame.deathDate && sheetGame.deathDate !== 'TBA') 
-              ? sheetGame.deathDate 
+            deathDate: (sheetGame.deathDate && sheetGame.deathDate !== 'TBA')
+              ? sheetGame.deathDate
               : existingGame.deathDate,
             // Keep original ID or take sheet ID? Usually existing ID is fine
             id: existingGame.id

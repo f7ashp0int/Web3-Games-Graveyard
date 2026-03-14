@@ -26,6 +26,10 @@ const Tombstone: React.FC<TombstoneProps> = ({ game, onClick }) => {
               src={game.logoUrl}
               alt={`${game.name} logo`}
               className="w-full h-full object-contain p-1 group-hover:scale-110 transition-transform duration-300"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/wgd-Light.svg';
+              }}
             />
           </div>
           

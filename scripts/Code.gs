@@ -22,19 +22,27 @@ const COLUMN_MAP = {
   'Game Status': 'status',
   'Description': 'description',
   'Reason for Demise': 'reasonForDemise',
-  'Cause of Shutdown': 'reasonForDemise', // Added based on your form update
+  'Cause of Shutdown': 'reasonForDemise', 
   'Launch Date': 'launchDate',
   'Death Date': 'deathDate',
   'End Date': 'deathDate',
   'Logo URL': 'logoUrl',
+  'Logo Link': 'logoUrl',
   'Category': 'category',
+  'Game Genre': 'category',
+  'Twitter Handle': 'twitterHandle',
+  'X Handle': 'twitterHandle',
+  'Twitter X': 'twitterHandle',
   'Blockchain': 'blockchain',
   'Developer': 'developer',
   'Funding Raised': 'fundingRaised',
+  'Funding': 'fundingRaised',
   'Peak Players': 'peakPlayers',
   'Source / Reference': 'source',
+  'Official Website': 'source',
   'Tags': 'tags',
-  'Your Name / Handle': 'addedBy'
+  'Your Name / Handle': 'addedBy',
+  'Your Name': 'addedBy'
 };
 
 function doGet(e) {
@@ -50,7 +58,7 @@ function getGameData() {
   
   if (data.length < 2) return []; // No data
   
-  const headers = data[0];
+  const headers = data[0].map(h => String(h).trim()); // Boost: Trim headers
   const rows = data.slice(1);
   
   const games = rows.map((row, index) => {
@@ -69,22 +77,21 @@ function getGameData() {
       }
       
       // Clean up strings
-      if (typeof value === 'string') {
-        value = value.trim();
+      if (value !== null && value !== undefined) {
+        value = String(value).trim();
       }
       
       // Only add if key is known or we want to keep all columns
-      // For safety/cleanliness, we only map known keys if possible, but fallback is okay
       if (Object.values(COLUMN_MAP).includes(key)) {
          game[key] = value;
       }
     });
-    
+
     return game;
   });
 
   // Filter out empty rows (where name is missing)
-  return games.filter(g => g.name);
+  return games.filter(g => g.name && g.name !== 'undefined' && g.name !== 'null');
 }
 
 // Test function to run in the editor

@@ -46,7 +46,15 @@ const GameDetailModal: React.FC<GameDetailModalProps> = ({ game, onClose }) => {
 
         <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
           <div className="flex-shrink-0 w-24 h-24 bg-[#5e59a5] rounded-full flex items-center justify-center border-2 border-[#bbd32d] overflow-hidden">
-            <img src={game.logoUrl} alt={`${game.name} logo`} className="w-full h-full object-contain p-2" />
+            <img 
+              src={game.logoUrl} 
+              alt={`${game.name} logo`} 
+              className="w-full h-full object-contain p-2" 
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/wgd-Light.svg';
+              }}
+            />
           </div>
           <div className="text-center sm:text-left">
             <h2 className="text-3xl font-bold text-white">{game.name}</h2>

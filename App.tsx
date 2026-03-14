@@ -54,6 +54,15 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<GameStatus | 'ALL'>(GameStatus.DEAD);
   const [sortBy, setSortBy] = useState<'death_desc' | 'death_asc' | 'name_asc' | 'name_desc'>('death_desc');
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(50);
+
+  // Reset page when filters or sorting change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, sortBy, pageSize]);
 
   useEffect(() => {
     const loadGames = async () => {
@@ -93,14 +102,29 @@ const App: React.FC = () => {
             return a.name.localeCompare(b.name);
           case 'name_desc':
             return b.name.localeCompare(a.name);
-          case 'death_asc':
-            return parseDeathDate(a.deathDate).getTime() - parseDeathDate(b.deathDate).getTime();
+          case 'death_asc': {
+            const diff = parseDeathDate(a.deathDate).getTime() - parseDeathDate(b.deathDate).getTime();
+            if (diff !== 0) return diff;
+            // Tie-breaker: Newer additions first for same/unknown death date
+            return new Date(b.lastUpdated || 0).getTime() - new Date(a.lastUpdated || 0).getTime();
+          }
           case 'death_desc':
-          default:
-            return parseDeathDate(b.deathDate).getTime() - parseDeathDate(a.deathDate).getTime();
+          default: {
+            const diff = parseDeathDate(b.deathDate).getTime() - parseDeathDate(a.deathDate).getTime();
+            if (diff !== 0) return diff;
+            // Tie-breaker: Newer additions first for same/unknown death date
+            return new Date(b.lastUpdated || 0).getTime() - new Date(a.lastUpdated || 0).getTime();
+          }
         }
       });
   }, [allGames, statusFilter, searchTerm, sortBy]);
+
+  const totalPages = Math.ceil(filteredAndSortedGames.length / pageSize);
+  
+  const paginatedGames = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredAndSortedGames.slice(startIndex, startIndex + pageSize);
+  }, [filteredAndSortedGames, currentPage, pageSize]);
 
   const handleTombstoneClick = (game: Game) => {
     setSelectedGame(game);
@@ -131,9 +155,9 @@ const App: React.FC = () => {
         </div>
 
         {/* Controls Section */}
-        <div className="mb-12 flex flex-col md:flex-row gap-4 justify-center items-center max-w-4xl mx-auto bg-[#342f52]/30 p-6 rounded-2xl border border-[#5e59a5]/30 backdrop-blur-sm">
+        <div className="mb-12 flex flex-col lg:flex-row gap-4 justify-center items-center max-w-5xl mx-auto bg-[#342f52]/30 p-6 rounded-2xl border border-[#5e59a5]/30 backdrop-blur-sm">
           {/* Search */}
-          <div className="relative w-full md:w-1/3">
+          <div className="relative w-full lg:w-1/3">
             <input
               type="text"
               placeholder="Search games..."
@@ -147,7 +171,7 @@ const App: React.FC = () => {
           </div>
 
           {/* Status Filter */}
-          <div className="w-full md:w-1/4">
+          <div className="w-full lg:w-1/4">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as GameStatus | 'ALL')}
@@ -161,16 +185,28 @@ const App: React.FC = () => {
           </div>
 
           {/* Sort Filter */}
-          <div className="w-full md:w-1/3">
+          <div className="w-full lg:w-1/4">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
               className="w-full bg-[#1b1a2b]/80 text-white border border-[#5e59a5]/50 rounded-lg px-4 py-2 focus:outline-none focus:border-[#bbd32d] focus:ring-1 focus:ring-[#bbd32d] transition-colors appearance-none cursor-pointer"
             >
-              <option value="death_desc">Latest Death (Default)</option>
+              <option value="death_desc">Latest Death</option>
               <option value="death_asc">Oldest Death</option>
               <option value="name_asc">Name (A-Z)</option>
               <option value="name_desc">Name (Z-A)</option>
+            </select>
+          </div>
+
+          {/* Page Size selector */}
+          <div className="w-full lg:w-40">
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className="w-full bg-[#1b1a2b]/80 text-white border border-[#5e59a5]/50 rounded-lg px-4 py-2 focus:outline-none focus:border-[#bbd32d] focus:ring-1 focus:ring-[#bbd32d] transition-colors appearance-none cursor-pointer font-medium"
+            >
+              <option value={50}>50 per page</option>
+              <option value={100}>100 per page</option>
             </select>
           </div>
         </div>
@@ -180,13 +216,78 @@ const App: React.FC = () => {
             <div className="text-lg text-gray-400">Loading games from community...</div>
           </div>
         ) : (
-          <div 
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-16"
-          >
-            {filteredAndSortedGames.map((game) => (
-              <Tombstone key={game.id} game={game} onClick={handleTombstoneClick} />
-            ))}
-          </div>
+          <>
+            <div className="flex justify-between items-center mb-6 text-sm text-gray-400">
+              <div>
+                Showing <span className="text-[#bbd32d] font-bold">
+                  {filteredAndSortedGames.length > 0 ? (currentPage - 1) * pageSize + 1 : 0}
+                </span> to <span className="text-[#bbd32d] font-bold">
+                  {Math.min(currentPage * pageSize, filteredAndSortedGames.length)}
+                </span> of <span className="text-white font-bold">{filteredAndSortedGames.length}</span> games
+              </div>
+            </div>
+
+            <div 
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-16"
+            >
+              {paginatedGames.map((game) => (
+                <Tombstone key={game.id} game={game} onClick={handleTombstoneClick} />
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-16 flex justify-center items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 rounded-lg bg-[#342f52]/50 border border-[#5e59a5]/30 text-gray-300 hover:border-[#bbd32d] hover:text-white disabled:opacity-30 disabled:hover:border-[#5e59a5]/30 disabled:cursor-not-allowed transition-all"
+                >
+                  Previous
+                </button>
+                
+                <div className="flex items-center gap-1 mx-4">
+                  {[...Array(totalPages)].map((_, i) => {
+                    const page = i + 1;
+                    // Show first, last, and pages around current
+                    if (
+                      page === 1 || 
+                      page === totalPages || 
+                      (page >= currentPage - 1 && page <= currentPage + 1)
+                    ) {
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`w-10 h-10 rounded-lg border transition-all ${
+                            currentPage === page 
+                              ? 'bg-[#bbd32d] border-[#bbd32d] text-[#1b1a2b] font-bold shadow-[0_0_15px_rgba(187,211,45,0.4)]' 
+                              : 'bg-[#342f52]/30 border-[#5e59a5]/30 text-gray-400 hover:border-[#bbd32d] hover:text-white'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    } else if (
+                      page === currentPage - 2 || 
+                      page === currentPage + 2
+                    ) {
+                      return <span key={page} className="text-gray-600">...</span>;
+                    }
+                    return null;
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 rounded-lg bg-[#342f52]/50 border border-[#5e59a5]/30 text-gray-300 hover:border-[#bbd32d] hover:text-white disabled:opacity-30 disabled:hover:border-[#5e59a5]/30 disabled:cursor-not-allowed transition-all"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
         )}
       </main>
       <Footer />
